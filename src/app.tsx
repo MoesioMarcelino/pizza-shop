@@ -14,7 +14,7 @@ export function App() {
     <HelmetProvider>
       <Helmet titleTemplate="%s | Pizza.Shop" />
       <ThemeProvider defaultTheme="dark" storageKey="pizza-shop-theme">
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" closeButton />
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
         </QueryClientProvider>

@@ -1,6 +1,7 @@
 import { Separator } from '@radix-ui/react-separator'
 import { useQuery } from '@tanstack/react-query'
 import { Building, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 
 import { getManagedRestaurant } from '@/api/get-managed-restaurant'
 import { getProfile } from '@/api/get-profile'
@@ -18,6 +19,8 @@ import {
 import { Skeleton } from './ui/skeleton'
 
 export function AccountMenu() {
+  const [openDialog, setOpenDialog] = useState(false)
+
   const { data: profile, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
@@ -31,7 +34,7 @@ export function AccountMenu() {
     })
 
   return (
-    <Dialog>
+    <Dialog open={openDialog}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -63,7 +66,7 @@ export function AccountMenu() {
             )}
           </DropdownMenuLabel>
           <Separator />
-          <DialogTrigger asChild>
+          <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
             <DropdownMenuItem>
               <Building className="mr-2 h-4 w-4" />
               <span>Perfil da loja</span>
@@ -76,7 +79,7 @@ export function AccountMenu() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <StoreProfileDialog />
+      <StoreProfileDialog openDialog={setOpenDialog} />
     </Dialog>
   )
 }

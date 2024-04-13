@@ -29,7 +29,11 @@ const storeProfileSchema = z.object({
 
 type StoreProfileSchema = z.infer<typeof storeProfileSchema>
 
-export function StoreProfileDialog() {
+type StoreProfileDialogProps = {
+  openDialog: (open: boolean) => void
+}
+
+export function StoreProfileDialog({ openDialog }: StoreProfileDialogProps) {
   const queryClient = useQueryClient()
 
   const { data: managedRestaurant } = useQuery({
@@ -73,6 +77,7 @@ export function StoreProfileDialog() {
     try {
       await updateProfileFn({ name, description })
       toast.success('Perfil atualizado com sucesso!')
+      openDialog(false)
     } catch (error) {
       toast.error('Falha ao atualizar o perfil, tente novamente')
     }
@@ -114,9 +119,11 @@ export function StoreProfileDialog() {
               Cancelar
             </Button>
           </DialogClose>
-          <Button type="submit" variant="success" disabled={isSubmitting}>
-            Salvar
-          </Button>
+          <DialogClose asChild>
+            <Button type="submit" variant="success" disabled={isSubmitting}>
+              Salvar
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </form>
     </DialogContent>

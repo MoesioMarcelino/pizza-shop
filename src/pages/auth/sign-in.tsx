@@ -24,7 +24,6 @@ export function SignIn() {
 
   async function handleSignIn(data: SignInForm) {
     try {
-      console.log('🚀 ~ handleSignIn ~ data:', data)
       toast.success('Enviamos um link de autenticação para seu email', {
         action: {
           label: 'Reenviar',

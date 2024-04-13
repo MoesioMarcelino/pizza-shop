@@ -1,9 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { Dashboard } from '@/pages/app/dashboard'
-
 import { AppLayout } from './pages/_layouts/app'
 import { AuthLayout } from './pages/_layouts/auth'
+import { Dashboard } from './pages/app/dashboard/dashboard'
 import { Orders } from './pages/app/orders/orders'
 import { SignIn } from './pages/auth/sign-in'
 import { SignUp } from './pages/auth/sign-up'

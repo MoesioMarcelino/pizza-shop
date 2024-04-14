@@ -1,12 +1,31 @@
+import 'dayjs/locale/pt-br'
+
+import dayjs from 'dayjs'
+import isLeapYear from 'dayjs/plugin/isLeapYear'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { ArrowRight, Search, X } from 'lucide-react'
 
+import { Order } from '@/api/get-orders'
+import { OrderStatus } from '@/components/order-status'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 import { OrderDetails } from './order-details'
 
-export function OrderTableRow() {
+dayjs.extend(relativeTime)
+dayjs.extend(isLeapYear)
+dayjs.locale('pt-br')
+
+export type OrderTableRowProps = Order
+
+export function OrderTableRow({
+  createdAt,
+  customerName,
+  orderId,
+  status,
+  total,
+}: OrderTableRowProps) {
   return (
     <TableRow>
       <TableCell>
@@ -21,18 +40,17 @@ export function OrderTableRow() {
           <OrderDetails />
         </Dialog>
       </TableCell>
-      <TableCell className="font-mono text-xs font-medium">
-        234234hg234uyg
+      <TableCell className="font-mono text-xs font-medium">{orderId}</TableCell>
+      <TableCell className="text-muted-foreground">
+        {dayjs(createdAt).fromNow()}
       </TableCell>
-      <TableCell className="text-muted-foreground">Há 15 minutos</TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-slate-400" />
-          <span className="font-medium text-muted-foreground">Pendente</span>
-        </div>
+        <OrderStatus status={status} />
       </TableCell>
-      <TableCell className="font-medium">Moésio Ferreira Marcelino</TableCell>
-      <TableCell className="font-medium">R$ 149,90</TableCell>
+      <TableCell className="font-medium">{customerName}</TableCell>
+      <TableCell className="font-medium">
+        {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+      </TableCell>
       <TableCell>
         <Button variant="outline" size="xs">
           <ArrowRight className="mr-2 h-3 w-3" />

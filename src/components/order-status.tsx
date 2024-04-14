@@ -20,7 +20,7 @@ export function OrderStatus({ status }: OrderStatusProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className={`"h-2 w-2 rounded-full ${color}"`} />
+      <span className={`h-2 w-2 rounded-full ${color}`} />
       <span className="font-medium text-muted-foreground">{label}</span>
     </div>
   )

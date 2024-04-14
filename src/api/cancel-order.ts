@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 
-export type GetOrderDetailsPayload = { orderId: string }
+export type DeleteOrderPayload = { orderId: string }
 
-export async function cancelOrder({ orderId }: GetOrderDetailsPayload) {
+export async function cancelOrder({ orderId }: DeleteOrderPayload) {
   await api.patch(`/orders/${orderId}/cancel`)
 }

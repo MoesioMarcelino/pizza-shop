@@ -1,12 +1,5 @@
 import { api } from '@/lib/axios'
-
-export type Order = {
-  orderId: string
-  createdAt: string
-  status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
-  customerName: string
-  total: number
-}
+import { Order } from '@/models/order'
 
 export type GetOrdersPayload = {
   pageIndex?: number | null

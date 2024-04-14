@@ -44,7 +44,7 @@ export function AccountMenu() {
   })
 
   return (
-    <Dialog open={openDialog}>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -76,7 +76,7 @@ export function AccountMenu() {
             )}
           </DropdownMenuLabel>
           <Separator />
-          <DialogTrigger asChild onClick={() => setOpenDialog(true)}>
+          <DialogTrigger asChild>
             <DropdownMenuItem>
               <Building className="mr-2 h-4 w-4" />
               <span>Perfil da loja</span>

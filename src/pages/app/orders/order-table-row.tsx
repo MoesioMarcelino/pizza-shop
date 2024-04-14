@@ -1,21 +1,14 @@
-import 'dayjs/locale/pt-br'
-
 import dayjs from 'dayjs'
-import isLeapYear from 'dayjs/plugin/isLeapYear'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { ArrowRight, Search, X } from 'lucide-react'
+import { useState } from 'react'
 
-import { Order } from '@/api/get-orders'
 import { OrderStatus } from '@/components/order-status'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
+import { Order } from '@/models/order'
 
 import { OrderDetails } from './order-details'
-
-dayjs.extend(relativeTime)
-dayjs.extend(isLeapYear)
-dayjs.locale('pt-br')
 
 export type OrderTableRowProps = Order
 
@@ -26,10 +19,12 @@ export function OrderTableRow({
   status,
   total,
 }: OrderTableRowProps) {
+  const [isDetailsOpened, setIsDetailsOpened] = useState(false)
+
   return (
     <TableRow>
       <TableCell>
-        <Dialog>
+        <Dialog open={isDetailsOpened} onOpenChange={setIsDetailsOpened}>
           <DialogTrigger asChild>
             <Button variant="outline" size="xs">
               <Search className="h-3 w-3" />
@@ -37,7 +32,7 @@ export function OrderTableRow({
             </Button>
           </DialogTrigger>
 
-          <OrderDetails />
+          <OrderDetails orderId={orderId} open={isDetailsOpened} />
         </Dialog>
       </TableCell>
       <TableCell className="font-mono text-xs font-medium">{orderId}</TableCell>
@@ -49,7 +44,10 @@ export function OrderTableRow({
       </TableCell>
       <TableCell className="font-medium">{customerName}</TableCell>
       <TableCell className="font-medium">
-        {total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+        {(total / 100).toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        })}
       </TableCell>
       <TableCell>
         <Button variant="outline" size="xs">

@@ -1,14 +1,7 @@
 import { api } from '@/lib/axios'
+import { Profile } from '@/models/profile'
 
-export type GetProfileResponse = {
-  id: string
-  name: string
-  email: string
-  phone: string
-  role: 'manager' | 'customer'
-  createdAt: Date | null
-  updatedAt: Date | null
-}
+export type GetProfileResponse = Profile
 
 export async function getProfile() {
   const response = await api.get<GetProfileResponse>('/me')

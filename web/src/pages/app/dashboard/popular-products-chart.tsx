@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query'
-import { BarChart } from 'lucide-react'
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
-import colors from 'tailwindcss/colors'
+import { useQuery } from "@tanstack/react-query";
+import { BarChart, Loader2 } from "lucide-react";
+import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import colors from "tailwindcss/colors";
 
 import {
   getPopularProducts,
   GetPopularProductsResponse,
-} from '@/api/get-popular-produts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+} from "@/api/get-popular-produts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const COLORS = [
   colors.sky[500],
@@ -15,18 +15,18 @@ const COLORS = [
   colors.violet[500],
   colors.emerald[500],
   colors.rose[500],
-]
+];
 
 type CustomizedLabelProps = {
-  popularProducts: GetPopularProductsResponse
-  cx: number
-  cy: number
-  midAngle: number
-  innerRadius: number
-  outerRadius: number
-  value: number
-  index: number
-}
+  popularProducts: GetPopularProductsResponse;
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  value: number;
+  index: number;
+};
 
 function CustomizedLabel({
   popularProducts,
@@ -38,32 +38,32 @@ function CustomizedLabel({
   outerRadius,
   value,
 }: CustomizedLabelProps) {
-  const RADIAN = Math.PI / 180
-  const radius = 12 + innerRadius + (outerRadius - innerRadius)
-  const x = cx + radius * Math.cos(-midAngle * RADIAN)
-  const y = cy + radius * Math.sin(-midAngle * RADIAN)
+  const RADIAN = Math.PI / 180;
+  const radius = 12 + innerRadius + (outerRadius - innerRadius);
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <text
       x={x}
       y={y}
       className="fill-muted-foreground text-xs"
-      textAnchor={x > cx ? 'start' : 'end'}
+      textAnchor={x > cx ? "start" : "end"}
       dominantBaseline="central"
     >
       {popularProducts[index].product.length > 12
-        ? popularProducts[index].product.substring(0, 12).concat('...')
-        : popularProducts[index].product}{' '}
+        ? popularProducts[index].product.substring(0, 12).concat("...")
+        : popularProducts[index].product}{" "}
       ({value})
     </text>
-  )
+  );
 }
 
 export function PopularProductsChart() {
   const { data: popularProducts } = useQuery({
-    queryKey: ['metrics', 'popular-products'],
+    queryKey: ["metrics", "popular-products"],
     queryFn: getPopularProducts,
-  })
+  });
 
   return (
     <Card className="col-span-1">
@@ -77,7 +77,7 @@ export function PopularProductsChart() {
       </CardHeader>
 
       <CardContent>
-        {popularProducts && (
+        {popularProducts ? (
           <ResponsiveContainer width="100%" height={240}>
             <PieChart style={{ fontSize: 12 }}>
               <Pie
@@ -107,8 +107,12 @@ export function PopularProductsChart() {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

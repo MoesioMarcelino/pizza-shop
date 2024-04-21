@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
-import dayjs from 'dayjs'
-import { Trash } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { DateRange } from 'react-day-picker'
-import { useSearchParams } from 'react-router-dom'
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { Loader2, Trash } from "lucide-react";
+import { useMemo, useState } from "react";
+import { DateRange } from "react-day-picker";
+import { useSearchParams } from "react-router-dom";
 import {
   CartesianGrid,
   Line,
@@ -11,58 +11,58 @@ import {
   ResponsiveContainer,
   XAxis,
   YAxis,
-} from 'recharts'
-import colors from 'tailwindcss/colors'
+} from "recharts";
+import colors from "tailwindcss/colors";
 
-import { getDailyRevenueInPeriod } from '@/api/get-daily-revenue-in-period'
-import { DateRangePicker } from '@/components/data-range-picker'
-import { Button } from '@/components/ui/button'
+import { getDailyRevenueInPeriod } from "@/api/get-daily-revenue-in-period";
+import { DateRangePicker } from "@/components/data-range-picker";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 export function RevenueChart() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const dateFrom =
-    searchParams.get('from') ?? dayjs(new Date()).subtract(7, 'days')
-  const dateTo = searchParams.get('to') ?? new Date()
+    searchParams.get("from") ?? dayjs(new Date()).subtract(7, "days");
+  const dateTo = searchParams.get("to") ?? new Date();
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: dayjs(dateFrom).toDate(),
     to: dayjs(dateTo).toDate(),
-  })
+  });
 
   const { data: dailyRevenueInPeriod } = useQuery({
-    queryKey: ['metrics', 'daily-revenue-in-period', dateRange],
+    queryKey: ["metrics", "daily-revenue-in-period", dateRange],
     queryFn: () =>
       getDailyRevenueInPeriod({ from: dateRange?.from, to: dateRange?.to }),
-  })
+  });
 
   function handleChangeDate(date?: DateRange) {
-    setDateRange(date)
+    setDateRange(date);
     setSearchParams((prev) => {
-      prev.set('from', dayjs(date?.from).toDate().toString())
-      prev.set('to', dayjs(date?.to).toDate().toString())
+      prev.set("from", dayjs(date?.from).toDate().toString());
+      prev.set("to", dayjs(date?.to).toDate().toString());
 
-      return prev
-    })
+      return prev;
+    });
   }
 
   const charData = useMemo(() => {
     return dailyRevenueInPeriod?.map((chartItem) => ({
       ...chartItem,
       receipt: chartItem.receipt / 100,
-    }))
-  }, [dailyRevenueInPeriod])
+    }));
+  }, [dailyRevenueInPeriod]);
 
   function resetDateRange() {
-    setDateRange(undefined)
+    setDateRange(undefined);
   }
 
   return (
@@ -88,7 +88,7 @@ export function RevenueChart() {
       </CardHeader>
 
       <CardContent>
-        {charData && (
+        {charData ? (
           <ResponsiveContainer width="100%" height={240}>
             <LineChart style={{ fontSize: 12 }} data={charData}>
               <YAxis
@@ -96,9 +96,9 @@ export function RevenueChart() {
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(value: number) =>
-                  value.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
+                  value.toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
                   })
                 }
               />
@@ -113,8 +113,12 @@ export function RevenueChart() {
               />
             </LineChart>
           </ResponsiveContainer>
+        ) : (
+          <div className="flex h-[240px] w-full items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

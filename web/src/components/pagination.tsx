@@ -3,16 +3,16 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-} from 'lucide-react'
+} from "lucide-react";
 
-import { Button } from './ui/button'
+import { Button } from "./ui/button";
 
 export type PaginationProps = {
-  pageIndex: number
-  totalCount: number
-  perPage: number
-  onPageChange: (pageIndex: number) => void
-}
+  pageIndex: number;
+  totalCount: number;
+  perPage: number;
+  onPageChange: (pageIndex: number) => void;
+};
 
 export function Pagination({
   pageIndex,
@@ -20,7 +20,7 @@ export function Pagination({
   totalCount,
   onPageChange,
 }: PaginationProps) {
-  const pages = Math.ceil(totalCount / perPage) ?? 1
+  const pages = Math.ceil(totalCount / perPage) ?? 1;
 
   return (
     <div className="flex items-center justify-between">
@@ -50,7 +50,7 @@ export function Pagination({
             disabled={pageIndex === 0}
           >
             <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Próxima página</span>
+            <span className="sr-only">Página anterior</span>
           </Button>
           <Button
             variant="outline"
@@ -59,7 +59,7 @@ export function Pagination({
             disabled={pages <= pageIndex + 1}
           >
             <ChevronRight className="h-4 w-4" />
-            <span className="sr-only">Página anterior</span>
+            <span className="sr-only">Próxima página</span>
           </Button>
           <Button
             variant="outline"
@@ -73,5 +73,5 @@ export function Pagination({
         </div>
       </div>
     </div>
-  )
+  );
 }

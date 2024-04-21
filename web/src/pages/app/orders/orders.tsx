@@ -1,50 +1,51 @@
-import { useQuery } from '@tanstack/react-query'
-import { Helmet } from 'react-helmet-async'
-import { useSearchParams } from 'react-router-dom'
-import { z } from 'zod'
+import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
+import { useSearchParams } from "react-router-dom";
+import { z } from "zod";
 
-import { getOrders } from '@/api/get-orders'
-import { Pagination } from '@/components/pagination'
+import { getOrders } from "@/api/get-orders";
+import { Pagination } from "@/components/pagination";
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Order } from '@/models/order'
+} from "@/components/ui/table";
+import { Order } from "@/models/order";
 
-import { OrderTableFilters } from './order-table-filters'
-import { OrderTableRow } from './order-table-row'
+import { OrderTableFilters } from "./order-table-filters";
+import { OrderTableRow } from "./order-table-row";
+import { OrderTableSkeleton } from "./order-table-skeleton";
 
 export function Orders() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const orderId = searchParams.get('orderId')?.trim()
-  const customerName = searchParams.get('customerName')?.trim()
-  const status = searchParams.get('status')?.trim() as Order['status'] & 'all'
+  const orderId = searchParams.get("orderId")?.trim();
+  const customerName = searchParams.get("customerName")?.trim();
+  const status = searchParams.get("status")?.trim() as Order["status"] & "all";
 
   const pageIndex = z.coerce
     .number()
     .transform((page) => page - 1)
-    .parse(searchParams.get('page') ?? 1)
+    .parse(searchParams.get("page") ?? 1);
 
-  const { data: result } = useQuery({
-    queryKey: ['orders', pageIndex, orderId, customerName, status],
+  const { data: result, isLoading: isLoadingOrders } = useQuery({
+    queryKey: ["orders", pageIndex, orderId, customerName, status],
     queryFn: () =>
       getOrders({
         pageIndex,
         orderId,
         customerName,
-        status: status === 'all' ? null : status,
+        status: status === "all" ? null : status,
       }),
-  })
+  });
 
   function handlePaginate(pageIndex: number) {
     setSearchParams((prev) => {
-      prev.set('page', (pageIndex + 1).toString())
-      return prev
-    })
+      prev.set("page", (pageIndex + 1).toString());
+      return prev;
+    });
   }
 
   return (
@@ -71,6 +72,7 @@ export function Orders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                {isLoadingOrders && <OrderTableSkeleton />}
                 {result &&
                   result.orders.map((order) => (
                     <OrderTableRow key={order.orderId} {...order} />
@@ -89,5 +91,5 @@ export function Orders() {
         </div>
       </div>
     </>
-  )
+  );
 }

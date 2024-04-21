@@ -1,14 +1,15 @@
-import { useQuery } from '@tanstack/react-query'
-import { DollarSign } from 'lucide-react'
+import { useQuery } from "@tanstack/react-query";
+import { DollarSign } from "lucide-react";
 
-import { getMonthCanceledOrdersAmount } from '@/api/get-month-canceled-orders-amount'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { getMonthCanceledOrdersAmount } from "@/api/get-month-canceled-orders-amount";
+import { MetricCardSkeleton } from "@/components/metric-cart-skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function MonthCanceledOrdersAmountCard() {
   const { data: monthCanceledOrdersMonth } = useQuery({
     queryFn: getMonthCanceledOrdersAmount,
-    queryKey: ['metrics', 'month-canceled-orders-amount'],
-  })
+    queryKey: ["metrics", "month-canceled-orders-amount"],
+  });
 
   return (
     <Card>
@@ -20,7 +21,7 @@ export function MonthCanceledOrdersAmountCard() {
       </CardHeader>
 
       <CardContent className="mt-auto space-y-1">
-        {monthCanceledOrdersMonth && (
+        {monthCanceledOrdersMonth ? (
           <>
             <span className="text-2xl font-bold tracking-tight">
               {monthCanceledOrdersMonth.amount}
@@ -30,21 +31,23 @@ export function MonthCanceledOrdersAmountCard() {
                 <>
                   <span className="text-emerald-500 dark:text-emerald-400">
                     {monthCanceledOrdersMonth.diffFromLastMonth}%
-                  </span>{' '}
+                  </span>{" "}
                   em relação ao mês passado
                 </>
               ) : (
                 <>
                   <span className="text-rose-500 dark:text-rose-400">
                     +{monthCanceledOrdersMonth.diffFromLastMonth}%
-                  </span>{' '}
+                  </span>{" "}
                   em relação ao mês passado
                 </>
               )}
             </p>
           </>
+        ) : (
+          <MetricCardSkeleton />
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

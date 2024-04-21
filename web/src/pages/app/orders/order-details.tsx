@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
-import dayjs from 'dayjs'
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
-import { getOrderDetails } from '@/api/get-order-details'
-import { OrderStatus } from '@/components/order-status'
+import { getOrderDetails } from "@/api/get-order-details";
+import { OrderStatus } from "@/components/order-status";
 import {
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -17,23 +17,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
+import { OrderDetailsSkeleton } from "./order-details-skeleton";
 
 export type OrderDetailsProps = {
-  orderId: string
-  open: boolean
-}
+  orderId: string;
+  open: boolean;
+};
 
 export function OrderDetails({ orderId, open }: OrderDetailsProps) {
   const { data: order } = useQuery({
-    queryKey: ['order', orderId],
+    queryKey: ["order", orderId],
     queryFn: () => getOrderDetails({ orderId }),
     enabled: open,
-  })
+  });
 
-  if (!order) {
-    return null
-  }
+  // if (!order) {
+  //   return null;
+  // }
 
   return (
     <DialogContent>
@@ -65,7 +66,7 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
                   Telefone
                 </TableCell>
                 <TableCell className="flex justify-end">
-                  {order.customer.phone ?? 'Não informado'}
+                  {order.customer.phone ?? "Não informado"}
                 </TableCell>
               </TableRow>
               <TableRow>
@@ -102,17 +103,17 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
                       <TableCell>{product.name}</TableCell>
                       <TableCell className="text-right">{quantity}</TableCell>
                       <TableCell className="whitespace-nowrap text-right">
-                        {(priceInCents / 100).toLocaleString('pt-BR', {
-                          style: 'currency',
-                          currency: 'BRL',
+                        {(priceInCents / 100).toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
                         })}
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-right">
                         {((priceInCents * quantity) / 100).toLocaleString(
-                          'pt-BR',
+                          "pt-BR",
                           {
-                            style: 'currency',
-                            currency: 'BRL',
+                            style: "currency",
+                            currency: "BRL",
                           },
                         )}
                       </TableCell>
@@ -124,9 +125,9 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
                 <TableRow>
                   <TableCell colSpan={3}>Total do pedido</TableCell>
                   <TableCell className="text-right font-medium">
-                    {(order.totalInCents / 100).toLocaleString('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
+                    {(order.totalInCents / 100).toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
                     })}
                   </TableCell>
                 </TableRow>
@@ -134,7 +135,9 @@ export function OrderDetails({ orderId, open }: OrderDetailsProps) {
             </Table>
           )}
         </div>
-      ) : null}
+      ) : (
+        <OrderDetailsSkeleton />
+      )}
     </DialogContent>
-  )
+  );
 }

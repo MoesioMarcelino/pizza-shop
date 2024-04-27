@@ -7,11 +7,11 @@ export const getManagedRestaurantMock = http.get<
   GetManagedRestaurantResponse
 >("/managed-restaurant", async () => {
   return HttpResponse.json({
-    name: "Manager Name",
+    name: "Pizza Shop",
     createdAt: new Date(),
-    description: "Manager description",
-    id: "2iu34-gh23iu-4423hg",
-    managerId: "k23jh-g2j31hb-v223",
+    description: "Pizza Shop custom description",
+    id: "custom-restaurant-id",
+    managerId: "custom-user-id",
     updatedAt: new Date(),
   });
 });

@@ -1,38 +1,38 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { Helmet } from 'react-helmet-async'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { registerRestaurant } from '@/api/register-restaurant'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { registerRestaurant } from "@/api/register-restaurant";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const signUpForm = z.object({
   restaurantName: z.string(),
   managerName: z.string(),
   email: z.string().email(),
   phone: z.string(),
-})
+});
 
-type SignUpForm = z.infer<typeof signUpForm>
+type SignUpForm = z.infer<typeof signUpForm>;
 
 export function SignUp() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<SignUpForm>({
     resolver: zodResolver(signUpForm),
-  })
+  });
 
   const { mutateAsync: registerRestaurantFn } = useMutation({
     mutationFn: registerRestaurant,
-  })
+  });
 
   async function handleSignUp({
     email,
@@ -41,15 +41,15 @@ export function SignUp() {
     restaurantName,
   }: SignUpForm) {
     try {
-      registerRestaurantFn({ email, managerName, phone, restaurantName })
-      toast.success('Restaurante cadastrado com sucesso', {
+      await registerRestaurantFn({ email, managerName, phone, restaurantName });
+      toast.success("Restaurante cadastrado com sucesso", {
         action: {
-          label: 'Login',
+          label: "Login",
           onClick: () => navigate(`/sign-in?email=${email}`),
         },
-      })
+      });
     } catch (error) {
-      toast.error('Erro ao cadastrar restaurante')
+      toast.error("Erro ao cadastrar restaurante");
     }
   }
 
@@ -76,7 +76,7 @@ export function SignUp() {
               <Input
                 id="restaurantName"
                 type="text"
-                {...register('restaurantName')}
+                {...register("restaurantName")}
               />
             </div>
             <div className="space-y-4">
@@ -84,27 +84,27 @@ export function SignUp() {
               <Input
                 id="managerName"
                 type="text"
-                {...register('managerName')}
+                {...register("managerName")}
               />
             </div>
             <div className="space-y-4">
               <Label htmlFor="email">Seu email</Label>
-              <Input id="email" type="email" {...register('email')} />
+              <Input id="email" type="email" {...register("email")} />
             </div>
             <div className="space-y-4">
               <Label htmlFor="phone">Seu celular</Label>
-              <Input id="tel" type="phone" {...register('phone')} />
+              <Input id="tel" type="phone" {...register("phone")} />
             </div>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               Finalizar cadastro
             </Button>
 
             <div className="px-6 text-center text-sm leading-relaxed text-muted-foreground">
-              Ao continuar, você concorda com nossos{' '}
+              Ao continuar, você concorda com nossos{" "}
               <a href="#" className="underline underline-offset-4">
                 termos de serviços
-              </a>{' '}
-              e{' '}
+              </a>{" "}
+              e{" "}
               <a href="#" className="underline underline-offset-4">
                 políticas de privacidade
               </a>
@@ -113,5 +113,5 @@ export function SignUp() {
         </div>
       </div>
     </>
-  )
+  );
 }

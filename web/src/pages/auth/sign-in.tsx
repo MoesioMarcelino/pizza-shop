@@ -6,7 +6,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { login } from "@/api/login";
+import { signIn } from "@/api/sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,11 +29,11 @@ export function SignIn() {
     defaultValues: { email: searchParams.get("email") ?? "" },
   });
 
-  const { mutateAsync: authenticate } = useMutation({ mutationFn: login });
+  const { mutateAsync: authenticate } = useMutation({ mutationFn: signIn });
 
   async function handleSignIn({ email }: SignInForm) {
     try {
-      authenticate({ email });
+      await authenticate({ email });
       toast.success("Enviamos um link de autenticação para seu email", {
         action: {
           label: "Reenviar",

@@ -1,24 +1,24 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { Helmet } from 'react-helmet-async'
-import { useForm } from 'react-hook-form'
-import { Link, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
-import { z } from 'zod'
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
+import { useForm } from "react-hook-form";
+import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { login } from '@/api/login'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { login } from "@/api/login";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const signInForm = z.object({
   email: z.string().email(),
-})
+});
 
-type SignInForm = z.infer<typeof signInForm>
+type SignInForm = z.infer<typeof signInForm>;
 
 export function SignIn() {
-  const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams();
 
   const {
     register,
@@ -26,22 +26,22 @@ export function SignIn() {
     formState: { isSubmitting },
   } = useForm<SignInForm>({
     resolver: zodResolver(signInForm),
-    defaultValues: { email: searchParams.get('email') ?? '' },
-  })
+    defaultValues: { email: searchParams.get("email") ?? "" },
+  });
 
-  const { mutateAsync: authenticate } = useMutation({ mutationFn: login })
+  const { mutateAsync: authenticate } = useMutation({ mutationFn: login });
 
   async function handleSignIn({ email }: SignInForm) {
     try {
-      authenticate({ email })
-      toast.success('Enviamos um link de autenticação para seu email', {
+      authenticate({ email });
+      toast.success("Enviamos um link de autenticação para seu email", {
         action: {
-          label: 'Reenviar',
+          label: "Reenviar",
           onClick: () => handleSignIn({ email }),
         },
-      })
+      });
     } catch (error) {
-      toast.error('Credenciais invalidas')
+      toast.error("Credenciais invalidas");
     }
   }
 
@@ -65,7 +65,7 @@ export function SignIn() {
           <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)}>
             <div className="space-y-4">
               <Label htmlFor="email">Seu email</Label>
-              <Input id="email" type="email" {...register('email')} />
+              <Input id="email" type="email" {...register("email")} />
             </div>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               Acessar painel
@@ -74,5 +74,5 @@ export function SignIn() {
         </div>
       </div>
     </>
-  )
+  );
 }

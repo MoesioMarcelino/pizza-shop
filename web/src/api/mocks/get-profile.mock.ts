@@ -6,8 +6,8 @@ export const getProfileMock = http.get<never, never, GetProfileResponse>(
   async () => {
     return HttpResponse.json({
       name: "Manager Name",
-      createdAt: new Date().toString(),
-      updatedAt: new Date().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       email: "johndoe@example.com",
       id: "",
       role: "manager",

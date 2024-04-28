@@ -8,6 +8,7 @@ import { Pagination } from "@/components/pagination";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -73,14 +74,19 @@ export function Orders() {
               </TableHeader>
               <TableBody>
                 {isLoadingOrders && <OrderTableSkeleton />}
-                {result &&
+                {result && result.orders.length >= 1 ? (
                   result.orders.map((order) => (
                     <OrderTableRow key={order.orderId} {...order} />
-                  ))}
+                  ))
+                ) : (
+                  <TableCell colSpan={7} className="text-center">
+                    Nenhum resultado encontrado
+                  </TableCell>
+                )}
               </TableBody>
             </Table>
           </div>
-          {result && (
+          {result && result.orders.length >= 1 && (
             <Pagination
               pageIndex={result.meta.pageIndex}
               perPage={result.meta.perPage}

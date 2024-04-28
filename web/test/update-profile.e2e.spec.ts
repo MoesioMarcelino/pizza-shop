@@ -48,6 +48,8 @@ test("cancel update profile successfully", async ({ page }) => {
   const dialog = page.getByLabel("Perfil da loja");
   await page.getByRole("button", { name: "Cancelar" }).click();
 
+  await page.waitForTimeout(250);
+
   expect(dialog).not.toBeVisible();
   expect(page.getByRole("button", { name: "Pizza Shop" })).toBeVisible();
 });
@@ -60,6 +62,8 @@ test("close update profile dialog successfully", async ({ page }) => {
 
   const dialog = page.getByLabel("Perfil da loja");
   await page.getByRole("button", { name: "Close" }).click();
+
+  await page.waitForTimeout(250);
 
   expect(dialog).toBeHidden();
 });

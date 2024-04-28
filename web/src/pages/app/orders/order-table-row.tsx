@@ -1,22 +1,22 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import dayjs from 'dayjs'
-import { ArrowRight, Search, X } from 'lucide-react'
-import { useState } from 'react'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { ArrowRight, Search, X } from "lucide-react";
+import { useState } from "react";
 
-import { approveOrder } from '@/api/approve-order'
-import { cancelOrder } from '@/api/cancel-order'
-import { deliveryOrder } from '@/api/delivery-order'
-import { dispatchOrder } from '@/api/dispatch-order'
-import { GetOrdersResponse } from '@/api/get-orders'
-import { OrderStatus } from '@/components/order-status'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { TableCell, TableRow } from '@/components/ui/table'
-import { Order } from '@/models/order'
+import { approveOrder } from "@/api/approve-order";
+import { cancelOrder } from "@/api/cancel-order";
+import { deliverOrder } from "@/api/deliver-order";
+import { dispatchOrder } from "@/api/dispatch-order";
+import { GetOrdersResponse } from "@/api/get-orders";
+import { OrderStatus } from "@/components/order-status";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Order } from "@/models/order";
 
-import { OrderDetails } from './order-details'
+import { OrderDetails } from "./order-details";
 
-export type OrderTableRowProps = Order
+export type OrderTableRowProps = Order;
 
 export function OrderTableRow({
   createdAt,
@@ -25,14 +25,14 @@ export function OrderTableRow({
   status,
   total,
 }: OrderTableRowProps) {
-  const [isDetailsOpened, setIsDetailsOpened] = useState(false)
+  const [isDetailsOpened, setIsDetailsOpened] = useState(false);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  function updateOrderStatusOnCache(orderId: string, status: Order['status']) {
+  function updateOrderStatusOnCache(orderId: string, status: Order["status"]) {
     const ordersListCached = queryClient.getQueriesData<GetOrdersResponse>({
-      queryKey: ['orders'],
-    })
+      queryKey: ["orders"],
+    });
 
     ordersListCached.forEach(([cacheKey, cacheData]) => {
       if (cacheData) {
@@ -40,47 +40,47 @@ export function OrderTableRow({
           ...cacheData,
           orders: cacheData.orders.map((order) => {
             if (order.orderId === orderId) {
-              return { ...order, status }
+              return { ...order, status };
             }
 
-            return order
+            return order;
           }),
-        })
+        });
       }
-    })
+    });
   }
 
   const { mutateAsync: cancelOrderFn, isPending: isCancelingOrder } =
     useMutation({
       mutationFn: cancelOrder,
       async onSuccess(_, { orderId }) {
-        updateOrderStatusOnCache(orderId, 'canceled')
+        updateOrderStatusOnCache(orderId, "canceled");
       },
-    })
+    });
 
   const { mutateAsync: approveOrderFn, isPending: isApprovingOrder } =
     useMutation({
       mutationFn: approveOrder,
       async onSuccess(_, { orderId }) {
-        updateOrderStatusOnCache(orderId, 'processing')
+        updateOrderStatusOnCache(orderId, "processing");
       },
-    })
+    });
 
   const { mutateAsync: dispatchOrderFn, isPending: isDispatchingOrder } =
     useMutation({
       mutationFn: dispatchOrder,
       async onSuccess(_, { orderId }) {
-        updateOrderStatusOnCache(orderId, 'delivering')
+        updateOrderStatusOnCache(orderId, "delivering");
       },
-    })
+    });
 
   const { mutateAsync: deliveryOrderFn, isPending: isDeliveringOrder } =
     useMutation({
-      mutationFn: deliveryOrder,
+      mutationFn: deliverOrder,
       async onSuccess(_, { orderId }) {
-        updateOrderStatusOnCache(orderId, 'delivered')
+        updateOrderStatusOnCache(orderId, "delivered");
       },
-    })
+    });
 
   return (
     <TableRow>
@@ -105,13 +105,13 @@ export function OrderTableRow({
       </TableCell>
       <TableCell className="font-medium">{customerName}</TableCell>
       <TableCell className="font-medium">
-        {(total / 100).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
+        {(total / 100).toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
         })}
       </TableCell>
       <TableCell>
-        {status === 'pending' && (
+        {status === "pending" && (
           <Button
             variant="outline"
             size="xs"
@@ -123,7 +123,7 @@ export function OrderTableRow({
           </Button>
         )}
 
-        {status === 'processing' && (
+        {status === "processing" && (
           <Button
             variant="outline"
             size="xs"
@@ -135,7 +135,7 @@ export function OrderTableRow({
           </Button>
         )}
 
-        {status === 'delivering' && (
+        {status === "delivering" && (
           <Button
             variant="outline"
             size="xs"
@@ -152,7 +152,7 @@ export function OrderTableRow({
           variant="ghost"
           size="xs"
           disabled={
-            !['pending', 'processing'].includes(status) || isCancelingOrder
+            !["pending", "processing"].includes(status) || isCancelingOrder
           }
           onClick={() => cancelOrderFn({ orderId })}
         >
@@ -161,5 +161,5 @@ export function OrderTableRow({
         </Button>
       </TableCell>
     </TableRow>
-  )
+  );
 }

@@ -93,7 +93,7 @@ export function SignUp() {
             </div>
             <div className="space-y-4">
               <Label htmlFor="phone">Seu celular</Label>
-              <Input id="tel" type="phone" {...register("phone")} />
+              <Input id="phone" type="tel" {...register("phone")} />
             </div>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               Finalizar cadastro
